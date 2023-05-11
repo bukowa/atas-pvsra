@@ -630,10 +630,29 @@
             }
         }
 
+        public List<string> SessionTimeFrameSkip = new List<string>
+        {
+            "Daily", "Weekly"
+        };
+
+        public bool SessionIsSkipped()
+        {
+            if (SessionTimeFrameSkip.Contains(ChartInfo.TimeFrame))
+            {
+                return true;
+            }
+            return false;
+        }
         protected override void OnRender(RenderContext context, DrawingLayouts layout)
         {
             lock (_syncRoot)
             {
+
+                if (SessionIsSkipped())
+                {
+                    return;
+                }
+
                 int num = base.LastVisibleBarNumber + 1;
                 int num2 = num - base.VisibleBarsCount - 1;
                 foreach (Session session in _sessions)
